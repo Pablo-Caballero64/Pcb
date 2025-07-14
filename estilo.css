@@ -1,0 +1,47 @@
+#letras {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    padding: 15px 20px;
+}
+.tabla1 {
+	width: 100%;
+}
+.col_id {
+	background-color: #CACAF1;
+	width: 3%;
+	text-align: right;
+	border-right: 1px solid #bbb;
+	border-bottom: 1px solid #bbb;
+}
+.col_no {
+	background-color: #CACAF1;
+	width: 35%;
+	border-right: 1px solid #bbb;
+	border-bottom: 1px solid #bbb;
+}
+.col_ln1 {
+	background-color: #CACAF1;
+	width: 31%;
+	border-right: 1px solid #bbb;
+	border-bottom: 1px solid #bbb;
+}
+.col_ln2 {
+	background-color: #CACAF1;
+	width: 31%;
+	border-right: 1px solid #bbb;
+	border-bottom: 1px solid #bbb;
+}
+.col_no2 {
+	background-color: #CACAF1;
+	width: 85%;
+	border-right: 1px solid #bbb;
+	border-bottom: 1px solid #bbb;
+}
+.col_id2 {
+	background-color: #0B5345;
+	color: white;
+	width: 15%;
+	border-right: 1px solid #bbb;
+	border-bottom: 1px solid #bbb;
+}
