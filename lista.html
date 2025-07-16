@@ -88,16 +88,27 @@ function muestra_nombres(letra)
 	 defuncion = '<a style=\"align:right\" href=\"' + enlace_aheb_defun + '\">' + familiares[i][7] + '</a>';
 	 }
 
-    
-	tabla = tabla +  '<tr><td class="col_id">' + familiares[i][0] + '</td><td class="col_no"><div onclick="muestra(' + familiares[i][0] + ')">' + familiares[i][2] + ' ' + familiares[i][3] + ', ' + familiares[i][1] + '</div></td><td class="col_ln1">' + nacimiento + '</td><td class="col_ln2">' + defuncion + '</td></tr>';
+        marca_foto = familiares[i][0];
+        if (familiares[i][familiares[i].length-1] == "S")
+           {
+            marca_foto = marca_foto + "(F)";
+           }
+
+	tabla = tabla +  '<tr><td class="col_id">' + marca_foto + '</td><td class="col_no"><div onclick="muestra(' + familiares[i][0] + ')">' + familiares[i][2] + ' ' + familiares[i][3] + ', ' + familiares[i][1] + '</div></td><td class="col_ln1">' + nacimiento + '</td><td class="col_ln2">' + defuncion + '</td></tr>';
 	}
 	
-	
+        
    }
  
  tabla = tabla + '</table>'; 
  var id_tabla = document.getElementById("table_div");
  id_tabla.innerHTML=tabla;
+
+
+   
+
+
+
 }
 
 
@@ -399,7 +410,7 @@ var familiares = new Array (
 [8891,"Santiago","Achirica","Goyenechea","H",1,"29 de diciembre de 1857 en Busturia","3 de febrero de 1858 en Busturia",8315,8316,,"C9","BI",1357034,"",0,"N"],
 [8895,"Tomasa","Achirica","Goyenechea","M",1,"28 de diciembre de 1969 en Busturia","",8315,8316,,"C9","BI",1357002,"",0,"N"],
 [5427,"Vicente","Achirica","Goyenechea","H",1,"2 de febrero de 1900 en Busturia","18 de febrero de 1988 en Busturia",4383,4384,"C1",4490,"17 de noviembre de 1932 en Busturia","ZZ",0,5547,5548,"C9","BI",1350294,"",0,"N"],
-[5547,"María Antonia","Achirica","Gurmendi","M",1,"26 de octubre de 1933 en Busturia","",5427,4490,"C1",6726,"7 de agosto de 1960 en Busturia","ZZ",0,"C9","ZZ",0,"",0,"N"],
+[5547,"María Antonia","Achirica","Gurmendi","M",1,"26 de octubre de 1933 en Busturia","",5427,4490,"C1",6726,"7 de agosto de 1960 en Busturia","ZZ",0,"C9","ZZ",0,"",0,"S"],
 [5548,"María Victoria","Achirica","Gurmendi","M",1,"28 de septiembre de 1942 en Busturia","",5427,4490,"C1",6727,"10 de abril de 1980 en Busturia","ZZ",0,6728,6729,"C9","ZZ",0,"",0,"N"],
 [5996,"Carmen","Achirica","Lezámiz","M",1,"En Busturia","",0,0,"C1",5995,"","ZZ",0,4846,4898,"C9","ZZ",0,"",0,"N"],
 [11184,"María Bernarda","Achirica","Lezámiz","M",21,"20 de agosto de 1795 en Busturia","",0,0,"C1",11183,"5 de diciembre de 1821 en Busturia","BI",141174,11175,"C9","BI",402509,"",0,"N"],
