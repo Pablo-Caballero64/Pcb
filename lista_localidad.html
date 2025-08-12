@@ -21,7 +21,7 @@ function muestra_nombres(letra)
  {
            
  tabla='<br><br><br><br><br><table class="tabla1"><tr><th>Código</th><th>Nombre</th><th>Nacimiento</tr>';
-
+ contador = 0;
  for (var i = 0; i < familiares.length; i++)
    {
     localidad = familiares[i][4];
@@ -29,6 +29,7 @@ function muestra_nombres(letra)
         if (localidad == letra)
 	
 	{
+         contador = contador + 1;
  	         marca_foto = familiares[i][0];
         if (familiares[i][familiares[i].length-1] == "S")
            {
@@ -40,12 +41,14 @@ function muestra_nombres(letra)
 	
         
    }
- 
  tabla = tabla + '</table>'; 
  var id_tabla = document.getElementById("table_div");
  id_tabla.innerHTML=tabla;
 
 
+ cuenta = "Total seleccionados: " + contador; 
+ var id_contador = document.getElementById("contador_div");
+ id_contador.innerHTML=cuenta;
    
 
 
@@ -1248,7 +1251,7 @@ var familiares = new Array (
 [9548,"Jesús","Araucua","Andicoechea","Bermeo",0,"N"],
 [3955,"Leona","Arego","","Bermeo",0,"N"],
 [6799,"Fernanda","Arreche","","Bermeo",0,"N"],
-[4425,"Lorenza Palmira","Arrótegui","Marcaida","Bermeo",1864,"N"],
+[4425,"Lorenza Palmira","Arrótegui","Marcaida","Bermeo",1864,"S"],
 [13461,"Trinidad","Arrugaeta","","Bermeo",0,"N"],
 [12862,"Alejandro","Atela","Echevarría","Bermeo",1883,"N"],
 [12860,"Antonina","Atela","Echevarría","Bermeo",1874,"N"],
@@ -7551,7 +7554,7 @@ var familiares = new Array (
 [1105,"Ignacia","Abendibar","Arandoño","Mallabia",0,"N"],
 [7690,"Martín Antonio","Apoita","","Mallabia",0,"N"],
 [6649,"Atanasio","Apoita","Cengotitabengoa","Mallabia",0,"N"],
-[5478,"Fernando María","Apoita","Gasteaburu","Mallabia",1855,"N"],
+[5478,"Fernando María","Apoita","Gasteaburu","Mallabia",1855,"S"],
 [9186,"Francisco","Elguezua","","Mallabia",0,"N"],
 [8667,"Antonio","Elguezua","Plaza","Mallabia",0,"N"],
 [13987,"Antonia","Garitagoitia","Uriarte","Mallabia",1863,"N"],
@@ -9689,6 +9692,8 @@ var familiares = new Array (
 </head>
 <body onload ="recibe_param()">
 <div id="table_div"></div>
+<p>
+<div id="contador_div"</div>
 
 </body>
 </html>
