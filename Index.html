@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Selector de Localidades</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 30px;
+            background-color: #f8f9fa;
+        }
+        .contenedor-botones {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(40px, 1fr));
+            gap: 5px;
+            max-width: 600px;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+        button {
+            padding: 10px;
+            cursor: pointer;
+            border: 1px solid #007bff;
+            background: white;
+            color: #007bff;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        button:hover {
+            background: #007bff;
+            color: white;
+        }
+        .box-container {
+            width: 100%;
+            max-width: 400px;
+        }
+        select {
+            width: 100%;
+            height: 250px;
+            padding: 10px;
+            font-size: 16px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            outline: none;
+        }
+        select:focus {
+            border-color: #007bff;
+        }
+        .instrucciones {
+            margin-top: 10px;
+            color: #555;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Selección por inicial del primer apellido</h1>
+    
+    <div class="contenedor-botones" id="alfabeto"></div>
+
+    <div class="box-container">
+        <label>Selecciona por localidad de nacimiento</label>
+        <select id="lista-localidades" size="12">
+            <!-- Se llena con JS -->
+        </select>
+        <p class="instrucciones">💡 Haz clic en una localidad para ver la lista.</p>
+    </div>
+
+    <script>
+        const localidades = 
+["Abadiano","Abadiño","Abalcisqueta (Guipuzcoa)","Abanto Gallarta","Acorda","Aduna","Agüera","Agüera (Guriezo)","Agüera (Trucíos)","Aguinaga","Aire sur Adour (Las Landas)","Ajánguiz","Akorda","Alamedilla (Granada)","Albiz","Albóniga","Aldatz Larraun","Aldeanueva (Logroño)","Alemania","Alfaro","Algorta","Allandelagua","Alonsótegui","Altable","Ameyugo (Burgos)","Amorebieta","Amoroto","Amurrio","Anguiz (Burgos)","Anzuola","Aracaldo","Aragón","Arakaldo","Aramayo","Aramayona","Arbácegui","Arceniega","Arcentales","Areatza (Villaro)","Arechavaleta","Argentina","Arrancudiaga","Arrázola","Arrazua","Arriba (Navarra)","Arrieta","Arrigorriaga","Arrona","Arteaga","Arzew (Argelia)","Aspuru","Asteguieta (Foronda)","Astigarraga","Astigarribia","Atallo (Navarra)","Ataun","Aulesti","Aulestia","Avellaneda","Axpe","Aya (Guipúzcoa)","Ayala","Azcoitia","Azcona (Navarra)","Azkoitia","Aznalfarache (Sevilla)","Azpeitia","Azpilicueta (Mendaro)","Bachicabo","Baena (Córdoba)","Bakio","Balmaseda","Baquio","Baracaldo","Barambio","Barambio (Álava)","Barcelona","Bárcena de Cicero (Cantabria)","Barinaga","Basauri","Bayona (Francia)","Baza (Granada)","Beasain","Bedarona","Bedia","Beizama","Berango","Berástegui (Guipúzcoa)","Bergara","Bermeo","Bernagoitia","Berriatúa","Berriz","Bérriz","Beunzalarrea","Bilbao","Birkenhead (Gran Bretaña)","Bliecos (Soria)","Boise (Idaho, Usa)","Bolívar","Briviesca","Broto (Huesca)","Brujas","Bruselas","Buenos Aires (Argentina)","Burdeos (Francia)","Burgos","Burgueta (Burgos)","Busto de Bureba","Busturia","Calahorra","Calatayud","Campanario (Badajoz)","Campezo","Cardiff (Gran Bretaña)","Carranza","Cartagena","Casa de Bes (Murcia)","Cascante","Castejón","Castillo Elejabeitia","Castresana","Castro Urdiales","Catubig (Samar, Filipinas)","Ceánuri","Ceberio","Cenarruza","Cerrillo (Burgos)","Chorrillos (Chile)","Cienfuegos (Cuba)","Ciérvana","Cifuentes (Cuba)","Ciudad Rodrigo (Salamanca)","Cizúrquil","Cofiñal (León)","Colindres","Córdoba","Cordobilla","Corella","Cork","Cortézubi","Cózar (Ciudad Real)","Creciente (Pontevedra)","Cueto (Cantabria)","Derio","Deva","Dima","Durango","Düren (Alemania)","Ea","East Boston (USA)","Echano","Echevarría","Eibar","Elanchove","Elejabeitia","Elgoibar","Elgóibar","Elgueta","Elorrio","Elosu (Álava)","Elosúa","Emerando","Emerando (Meñaca)","Erandio","Ereño","Ermua","Errador (Cantabria)","Escoriaza","Espejo (Álava)","Estella","Estépar (Burgos)","Etxebarria","Ferrol","Fica","Filipinas","Forua","Francia","Fresno de Carballeda (Zamora)","Frúniz","Galdácano","Galdames","Galicia","Gallarta","Gamarra Mayor","Gámiz","Garai","Garay","Garciriaín (Navarra)","Garroy (Soria)","Gatica","Gaviria","Gijano","Gijón","Gordejuela","Górliz","Gorocica","Gran Bretaña","Guadalajara","Guaminí (Buenos Aires, Argentina)","Guamunte (Cuba)","Guanajuato (Méjico)","Guecho","Güeñes","Guereña","Guernica","Guerricaiz","Guetaria","Guizaburuaga","Gumiel del Mercado (Burgos)","Hainaut (Bélgica)","Haro","Herrara de Valdecañas (Palencia)","Hinojosa (Cuenca)","Huesca","Ibarrángelua","Ibarranguelua","Ibárruri","Iciar","Igea (Logroño)","Iparralde","Irún","Isasondo","Ispaster","Izurtza","Izurza","Jatabe","Javiérraga (Huesca)","Jemein","La Arboleda","Labouhayre (Francia)","La Coruña","La Horra (Burgos)","Lamindano","La Pampa","La Paz (Argentina)","La Playosa (Córdoba, Argentina)","Lapuebla de Labarca (Álava)","Laredo","La Rioja Alavesa","Larrabetzu","Larrabezúa","Larrauri","Las Arenas","Las Palmas","Las Rebolledas (Burgos)","Lastras de la Torre","Laucáriz","Lauquíniz","Laurgain (Aya)","Lazcano","Leipzig (Alemania)","Lejona","Lemona","Lemóniz","Lequeitio","Lezama","Limeza (Soria)","Liverpool","Lizarza","Llanteno","Llodio","Llorengoz","Logroño","Loma","Lujua","Luno","Madrid","Magunaechevarría","Málaga","Mallabia","Managua (Nicaragua)","Mañaria","Marbella","Marín","Marquina","Marquínez (Alava)","Marsá (Tarragona)","Maruri","Medina de Pomar","Méjico","Mena","Menan (Palencia)","Mendaro","Mendaro-Azpilgoeta","Mendata","Mendeja","Meñaca","Meñaka","Métrico","México","Miranda de Ebro","Miravalles","Mocarelli (Turín, Italia)","Mollinedo (Villaverde, Cantabria)","Moluson (Francia)","Mondragón","Mondrágón","Monforte de Lemos","Morga","Motrico","Múgica","Mundaca","Munguía","Munilla (La Rioja)","Munitibar","Munitíbar","Murélaga","Murguía","Murueta","Mutiloa (Guipúzcoa)","Muxika","Nachítua","Nalda","Nanclares de la Oca","Narvaja (Álava)","Nava","Navárniz","Navas del Marqués (Ávila)","Navia (La Coruña)","Nerja (Málaga)","New York (USA)","Nieves (Zacatecas, Méjico)","Nueva York","Nueva York (USA)","Ochandiano","Ocharan","Ohquian (Washington, USA)","Ondárroa","Oñate","Oquendo","Orduña","Orense","Orio","Orozco","Ortuella","Otañes","Otermin (Burgos)","Oyarzun","Padroluengo","Palena","Palencia","Pamplona","Pangusión (Burgos)","Pasajes de San Juan","Paul","Pedernales","Peñacerrada","Pinar del Río (Cuba)","Plencia","Pomar de Cinca (Huesca)","Pontevedra","Portugalete","Potes (Cantabria)","Poza de la Sal","Proaza (Oviedo)","Puente la Reina (Navarra)","Quejo","Quemado de Güines (Cuba)","Quintanar de la Sierra (Soria)","Quintanilla Somuñó","Quitanar de la Orden","Rabé de las Calzadas (Burgos)","Régil","Regla (Cuba)","Regojo","Regoyos","Remedios (Cuba)","Rentería","Rigoitia","Río Benito (Guinea)","Romaña","Ruffee (Charente, Francia)","Sagua la Grande (Cuba)","Sahún (Huesca)","Salazar","Salinas de Pisuerga","San Bartolomé de Béjar (Ávila)","San Feliú de Guixols","San Lorenzo del Escorial","San Martín de Unx (Navarra)","San Miguel de Orense","San Pelayo","San Roque de Rumieran (Santander)","San Salvador (El Salvador)","San Sebastián","Santa Eugenia (Oviedo)","Santander","Santa Rosalía (México)","Santo Domingo de la Calzada","Santurce","Santurdejo (Logroño)","San Vicente de la Barquera","Sao Paulo (Brasil)","Segura","Sestao","Sevilla","Solduengo de Bureba (Burgos)","Sondica","Sopelana","Sopuerta","Sorzano (Logroño)","Tardejas (Burgos)","Teruel","Tilburg (Holanda)","Toledo","Tolosa","Tordesillas (Soria)","Tormentas (Logroño)","Torrecilla","Torrecilla de Cameros (La Rioja)","Torrelavega","Torres de Segre","Tours","Trucíos","Ubidea","Uncella (Álava)","Urdúliz","Urrestilla","Uruguay","Valdemoro","Valdivia","Valencia","Valgañón (La Rioja)","Valladolid","Valle de Arratia","Velázar de Abajo (Barcelona)","Venezuela","Veracruz (México)","Viana","Viana de Bollo (Asturias)","Vigiano (Potenza, Italia)","Villacián","Villadiego","Villa Feliz (León)","Villafranca","Villafranca de Ordicia","Villafranca De Ordicia","Villalba","Villanañe","Villanueva de la Peña (Cantabria)","Villañez (Álava)","Villaño (Burgos)","Villaodrid (Lugo)","Villarcayo","Villar de Flores (Orense)","Villar de Soba","Villareal (Álava)","Villaro","Villarón (Oviedo)","Villarreal (Zumárraga)","Villasuso de Mena","Villaverde","Villavieja de Muñó","Villota de Losa (Burgos)","Vitoria","Yurre","Yurreta","Zacatecas (Méjico)","Zaldíbar","Zaldibia","Zaldúa (Ermua)","Zalduendo","Zalla","Zamudio","Zaragoza","Zarátamo","Zarauz","Zarimuz","Ziortza","Zollo","Zornoza","Zorroza","Zumaya",]
+
+
+
+        const contenedorAlfabeto = document.getElementById('alfabeto');
+        const selectLocalidades = document.getElementById('lista-localidades');
+        const letras = "ABCDEFGHIJKLMNÑOPQRSTUVWXYZ".split("");
+        function muestra_nombres(letra) {
+        url_arbol="lista.html?letra=" + letra;
+        window.location=url_arbol;}
+
+
+        // Función para llenar la lista
+        function cargarLocalidades(filtro = "") {
+            selectLocalidades.innerHTML = "";
+            const filtradas = localidades.filter(loc => loc.toUpperCase().startsWith(filtro));
+            
+            filtradas.forEach(loc => {
+                const option = document.createElement('option');
+                option.value = loc;
+                option.textContent = loc;
+                selectLocalidades.appendChild(option);
+            });
+        }
+
+        // Crear botones
+        letras.forEach(letra => {
+            const boton = document.createElement('button');
+            boton.innerText = letra;
+            boton.onclick = () => muestra_nombres(letra);
+            contenedorAlfabeto.appendChild(boton);
+        });
+
+        // --- EVENTO DE REDIRECCIÓN ---
+        selectLocalidades.addEventListener('change', function() {
+            const nombreLocalidad = this.value;
+            if (nombreLocalidad) {
+                // Redirige a otra página pasando el nombre por URL
+                // Puedes cambiar 'lista_localidad.html' por tu URL real
+                window.location.href = `lista_localidad.html?letra=${encodeURIComponent(nombreLocalidad)}`;
+            }
+        });
+
+        // Inicializar
+        cargarLocalidades("");
+    </script>
+
+</body>
+</html>
