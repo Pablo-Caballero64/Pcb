@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Mi Árbol Genealógico Real</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background: #f4f4f9; padding: 20px; }
+        .container { max-width: 900px; margin: auto; background: white; padding: 25px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+        ul { list-style: none; padding-left: 25px; border-left: 1px solid #ddd; margin: 5px 0; }
+        li { margin: 6px 0; position: relative; }
+        
+        .btn {
+            cursor: pointer; width: 22px; height: 22px; display: inline-flex;
+            align-items: center; justify-content: center; background: #3498db;
+            color: white; border-radius: 4px; font-size: 16px; margin-right: 8px;
+            user-select: none;
+        }
+        /* Clase para ocultar el botón cuando no hay datos */
+        .hidden-btn { visibility: hidden; pointer-events: none; }
+        
+        .card {
+            display: inline-block; padding: 5px 12px; border-radius: 6px;
+            background: #fff; border: 1px solid #ccc; font-size: 14px;
+            min-width: 250px;
+        }
+        .gen-tag { float: right; font-size: 10px; color: #aaa; margin-top: 3px; }
+        .nested { display: none; }
+        .show { display: block; }
+        h1 { text-align: center; color: #2c3e50; border-bottom: 3px solid #3498db; padding-bottom: 10px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Antepasados (12 generaciones)</h1>
+    <div id="arbol"></div>
+</div>
+
+<script>
+    // 1. RELLENA AQUÍ TUS DATOS REALES
+    const NOMBRES_CONOCIDOS = {
+	1: "Pablo Caballero Badiola",
+	2: "Miguel Ángel Caballero Lecumberri",
+	3: "Ana María Badiola Salazar",
+	4: "Ignacio Caballero Laca",
+	5: "Edelmira Carmen Badiola Renovales",
+	6: "Ceferino Atanasio Caballero Laca",
+	7: "Juana Salazar Garay",
+	8: "Gonzalo Caballero Aspiazu",
+	9: "Paulina Dolores Laca Llaguno",
+	10: "Hermenegildo Lecumberri Ubillos",
+	11: "Juana Marcelina Oreja Echániz",
+	12:"Daniel Eulogio Badiola Piedra",
+	13:"Santiaga Concepción Renovales Aramburuzabala",
+	14:"Benedicto Andrés Salazar Oña",
+	15:"María Juana Garay Gorrichategui",
+	16:"Mariano Caballero Vicente",
+	17:"Ramona Vicenta Aspiazu Fernández",
+	18:"Juan Félix Laca Ugarteburu",
+	19:"María Josefa Llaguno Calderón",
+	20:"Juan Antonio Lecumberri Izaguirre",
+	21:"María Juana Paula Ubillos Ispizua",
+	22:"Martín Lorenzo Oreja Arzadun",
+	23:"María Gertrudis Echániz Urquiaga",
+	24:"Julián María Badiola Pinedo",
+	25:"Juana Bautista Piedra Sertucha",
+	26:"Lorenzo Joaquín Renovales Torre",
+	27:"Dorotea Manuela Aramburuzabala Bringas",
+	28:"Juan Cruz Salazar Orive",
+	29:"Saturnina Oña Frías Cano",
+	30:"Santiago Ceferino Garay Garrastazu",
+	31:"María Paula Gorrichategui Arana",
+	32:"Bernabé Caballero Rodríguez",
+	33:"Paula Vicente García",
+	34:"Sebastián Vicente Aspiazu Altamira",
+	35:"Francisca Fernández De Barrio",
+	36:"Bartolomé Laca Orbea",
+	37:"Tomasa Ugarteburu Unamunzaga",
+	38:"Ramón Celedonio Llaguno Ocharan",
+	39:"María Francisca Calderón Toca",
+	40:"Juan Bautista Lecumberri Garay",
+	41:"María Manuela Izaguirre Ormaza",
+	42:"Juan Antonio Ubillos Chertudi",
+	43:"María Catalina Ispizua Achirica",
+	44:"Juan Miguel Oreja Saralegui",
+	45:"María Josefa Arzadun Aguirrezabala",
+	46:"José Lorenzo Echániz Calzacorta",
+	47:"María Clara Urquiaga Amallobieta",
+	48:"Juan Andrés Badiola Arocena",
+	49:"Josefa Juliana Pinedo Carpasoro",
+	50:"Miguel Piedra De la Bodega",
+	51:"Gabina Sertucha Azpiri",
+	52:"Miguel Renovales Zubiaga",
+	53:"María Severina Torre Fernández del Campo",
+	54:"Juan Aramburuzabala Azcárate",
+	55:"Aleja Juana María Bringas Cantero",
+	56:"Francisco Salazar Perea",
+	57:"Gregoria Orive Orive",
+	58:"Lorenzo Oña Castillo",
+	59:"Ramona Juliana Frías Cano López",
+	60:"Eugenio Garay Madariaga",
+	61:"Justa Garrastazu Basaldúa",
+	62:"Pedro Trifón Gorrichategui Ojanguren",
+	63:"Jacinta Arana Basauri",
+	64:"Francisco Caballero Fernández",
+	65:"Antonia Rodríguez Vivar",
+	66:"Miguel Vicente Domingo",
+	67:"María García Tablao",
+	68:"Antonio Aspiazu Irureta",
+	69:"María Concepción Altamira Salaverría",
+	70:"Gregorio Fernández ",
+	71:"Teresa De Barrio ",
+	72:"Bartolomé Laca Ibargoen Azerisabel",
+	73:"María Rosa Orbea Balzola",
+	74:"José Ugarteburu Egurrola",
+	75:"María Magdalena Unamunzaga Zelaia",
+	76:"Antonio Llaguno González",
+	77:"María Antonia Ocharan Carranza",
+	78:"Antonio Calderón ",
+	79:"María Josefa Toca ",
+	80:"José Antonio Lecumberri Labayen",
+	81:"Josefa Garay Gordóniz",
+	82:"Juan Bautista Izaguirre Echegoyen",
+	83:"María Ormaza Astuy",
+	84:"Juan Ubillos Astobieta",
+	85:"Magdalena Chertudi Irabien",
+	86:"Pedro Ispizua Abaroechevarría",
+	87:"Josefa Achirica Amunátegui",
+	88:"Martín José Oreja Usarralde",
+	89:"Gracia Saralegui Liceaga",
+	90:"Domingo Arzadun ",
+	91:"Teresa Aguirrezabala ",
+	92:"Francisco Echániz Macuso",
+	93:"María Magdalena Calzacorta Arescurrenaga",
+	94:"José Ignacio Urquiaga Iramategui",
+	95:"María Clara Amallobieta Laca",
+	96:"Manuel Badiola Echániz",
+	97:"María Carmen Arocena Echániz",
+	98:"José Pinedo Aguayo",
+	99:"María Carpasoro Lataburu",
+	100:"Simón Piedra Garnica",
+	101:"Juana De la Bodega Arriba",
+	102:"Juan Antonio Sertucha Demosti",
+	103:"Magdalena Azpiri Alcorta",
+	104:"Manuel Renovales Górgolas",
+	105:"Victoria Zubiaga Basozábal",
+	106:"Bernardo Torre Martín",
+	107:"Tomasa Fernández del Campo Mollinedo",
+	108:"Francisco Aramburuzabala Aguirregaviria",
+	109:"Cecilia Azcárate Aspiazu",
+	110:"Enrique Bringas Antuñano",
+	111:"Antonia Cantero Pando",
+	112:"Eusebio Salazar De la Haya",
+	113:"Tomasa Perea Vadillo",
+	114:"Juan Orive Guinea",
+	115:"Marta Orive Villaluenga",
+	116:"Narciso Oña ",
+	117:"Ángela Castillo ",
+	118:"Miguel Frías Cano Pérez de Maltranilla",
+	119:"Ramona López Sagredo",
+	120:"José Antonio Garay Landa",
+	121:"Nicolasa Madariaga Real de Asúa",
+	122:"Bartolomé Garrastazu García de la Trevilla",
+	123:"Josefa Basaldúa Retuerto",
+	124:"Francisco Gorrichategui Abendibar",
+	125:"Isabel Teresa Ojanguren Albístegui",
+	126:"Ignacio Arana Gavilondo",
+	127:"María Antonia Basauri Albisua",
+	128:"Santiago Caballero Gómez",
+	129:"Agustina Fernández Varona",
+	130:"Ángel Rodríguez Caballero",
+	131:"Melchora Vivar González",
+	132:"Tomás Vicente ",
+	133:"Máxima Domingo ",
+	134:"Tomás García ",
+	135:"Francisca Tablao Blanco",
+	136:"Francisco Ignacio Aspiazu Garmendia",
+	137:"María Ángela Irureta Iturbe",
+	138:"Francisco Ignacio Altamira Ossan",
+	139:"Ana Teresa Salaverría Arguirenea",
+	144:"Domingo Laca Iturretajaúregui",
+	145:"María Ibargoen Azerisabel Mendibe",
+	146:"Andrés Orbea Olaechea",
+	147:"Mariana Balzola Gárate",
+	148:"Martín Ugarteburu Ibargoen",
+	149:"María Egurrola Ugarteburu",
+	150:"Francisco Unamunzaga Arriaga",
+	151:"Magdalena Zelaia Larrina",
+	152:"Francisco Llaguno Llaguno",
+	153:"Ana María González Ocharan",
+	154:"Antonio Ocharan Llaguno",
+	155:"Asunción Carranza De la Puente",
+	160:"José Lecumberri Garayondo",
+	161:"Josefa Labayen Landa",
+	162:"José Garay Guerecaechevarría",
+	163:"Josefa Gordóniz Acillona",
+	164:"Pedro Izaguirre Zabaleta",
+	165:"María San Juan Echegoyen Goitia",
+	166:"José Ormaza Anasagasti",
+	167:"Francisca Astuy Azqueta",
+	168:"José Ubillos Labayen",
+	169:"Magdalena Astobieta Bulucua",
+	170:"Domingo Chertudi Astoreca",
+	171:"Magdalena Irabien Madariaga",
+	172:"Ignacio Ispizua Goitia Mendoza",
+	173:"Catalina Abaroechevarría Beoteguigogeascoa",
+	174:"José Achirica Mendoza",
+	175:"Magdalena Amunátegui Naverán",
+	176:"Juan Miguel Oreja Machinena",
+	177:"Micaela Usarralde Mocoroa",
+	178:"Juan Saralegui Gainza",
+	179:"Catalina Liceaga Otermin",
+	184:"Pedro Ignacio Echániz Zabaleta",
+	185:"María Josefa Macuso Lerchundi",
+	186:"Juan Calzacorta Auzocoa",
+	187:"Ana Arescurrenaga Acha",
+	188:"José Urquiaga Larruscain",
+	189:"Teresa Iramategui Urrunaga",
+	190:"Juan Amallobieta Echevarría",
+	191:"María Clara Laca Aulestia",
+	192:"Francisco Ignacio Badiola Arribálzaga",
+	193:"María Ana Echániz Gárate",
+	194:"Andrés Arocena Larrañaga",
+	195:"María Ignacia Echániz Orbegozo",
+	196:"Manuel Pinedo Cantero",
+	197:"María Aguayo Guzmán",
+	198:"Manuel Carpasoro Derendano",
+	199:"Agustina Lataburu Madaria",
+	200:"Felipe Miguel Piedra De la Colina",
+	201:"María Antonia Garnica De las Lastras",
+	202:"José De la Bodega Moncalean",
+	203:"Manuela Arriba Revuelta",
+	204:"José Sertucha Mendívil",
+	205:"Josefa Demosti Elorduy",
+	206:"Alberto Antonio Azpiri Arana",
+	207:"Simona Alcorta Alcorta",
+	208:"Francisco Renovales Tellitu",
+	209:"María Górgolas Palacio",
+	210:"Juan Fernando Zubiaga Vizcaya",
+	211:"Juana Basozábal Aurrecoechea",
+	212:"Pedro Torre Tablado",
+	213:"María Martín Cubillo",
+	214:"Manuel Antonio Fernández del Campo Ruiz Quintana",
+	215:"Ana María Mollinedo Santibañez",
+	216:"Marcos Aramburuzabala Marinurrutia",
+	217:"Teresa Aguirregaviria Ascarraga",
+	218:"Juan Azcárate Zubillaga",
+	219:"Micaela Aspiazu Menarozqueta",
+	220:"Domingo Bringas Gorcecona",
+	221:"Josefa Antuñano Vizcaya",
+	222:"Santiago Cantero Hernaiz",
+	223:"María Antonia Pando Bringas",
+	224:"Diego Salazar Orive",
+	225:"María Santos De la Haya De la Sobera",
+	226:"Bernabé Perea Oteo",
+	227:"Ana María Vadillo Vadillo",
+	228:"Alejandro Orive Angulo",
+	229:"Brígida Casilda Guinea Hortiz",
+	230:"Santiago Orive ",
+	231:"Inés Villaluenga ",
+	236:"Ildefonso Frías Cano Zárate",
+	237:"Manuela Pérez de Maltranilla Díez",
+	238:"Martín Román López Alonso",
+	239:"Josefa Sagredo Marroquín",
+	240:"Andrés Garay Aguirre",
+	241:"María Francisca Landa Lejona",
+	242:"Ascensio Madariaga Arteta",
+	243:"Nicolasa Antonia Real de Asúa Aguirre",
+	244:"Bartolomé Garrastazu Saldarriaga",
+	245:"Josefa García de la Trevilla Gómez de la Helguera",
+	246:"Domingo Basaldúa Murga",
+	247:"Francisca Retuerto Gárate",
+	248:"Pedro Gorrichategui Loyola",
+	249:"Ignacia Abendibar Arandoño",
+	250:"Martín Ibáñez Ojanguren Albisua",
+	251:"María Josefa Albístegui Aranzábal",
+	252:"Pedro Arana Elgueta",
+	253:"Jacinta Gavilondo Lezeta",
+	254:"Gregorio Basauri Barrutia",
+	255:"Águeda Albisua Elgueta",
+	288:"Domingo Laca Algorta",
+	289:"Josefa Iturretajaúregui Uriondo",
+	290:"Asensio Ibargoen Azerisabel Bengoechea",
+	291:"María Mendibe Maguregui",
+	292:"Juan Orbea Aseisabel",
+	293:"Ángela Olaechea Acuriola",
+	294:"Antonio Balzola Zubillaga",
+	295:"Marta Gárate Gavilondo",
+	296:"Francisco Ugarteburu Maguregui Urrusola",
+	297:"María Bauptista Ybarguen Orma Martínez de Asserisavel",
+	298:"Bartholome Egurrola Ymitola Amallobieta",
+	299:"María Antonia Ubarteburu Adorriaga Eizaga",
+	300:"Joseph Unamunzaga Lecaran",
+	301:"María Arriaga Beydia",
+	302:"Juan Zelaia Jaio de Susso",
+	303:"Cathalina Larrina Guerena Aguirre",
+	320:"Juan Ascensio Lecumberri Landaguren",
+	321:"Andresa Garayondo Horcondonaga",
+	322:"José Labayen Mendieta",
+	323:"Marina Landa Pagoeta",
+	324:"Juan Martín Garai Arriva Bajeneta",
+	325:"María Pérez de Guereca Echavarría Basterrechea",
+	326:"Juan Bautista Gordóniz Ybarra",
+	327:"Josepha Azilona Orve",
+	328:"Juan Bautista Izaguirre Arrizavalaga",
+	329:"Úrsula Zabaleta ",
+	330:"Juan Echegoyen Gutiérrez",
+	331:"María San Juan Goitia Mendoza",
+	332:"Manuel Ormaza Unibaso",
+	333:"María Anasagasti Uríbarri",
+	334:"Juan Astuy Zulueta",
+	335:"Dominga Azqueta Iturburu",
+	336:"Juan Ubillos Zabala",
+	337:"María Labaien Oca Arria",
+	340:"Domingo Chertudi Landa",
+	341:"Magdalena Astoreca Uribe",
+	344:"Pedro Ispizua ",
+	345:"María Juana Goitia Mendoza ",
+	346:"Pedro Abaroechevarría Mezeta",
+	347:"María Antonia Beoteguigogeascoa Alegría",
+	348:"Juan Bautista Achirica Uriarte",
+	349:"María San Juan Mendoza Busturia",
+	350:"Domingo Amunátegui Echabarría",
+	351:"María Naverán Tremoya",
+	376:"Pedro Urquiaga Gambocorta",
+	377:"María Larruscain Urquiagabasso",
+	378:"Pedro Yrametegui Churruca",
+	379:"Margarita Urrunaga Arancivia",
+	380:"Pedro Garcia Amallovieta Barroeta veña",
+	381:"María Echevarría Sarasibar",
+	382:"Joaquín Laca Idueta",
+	383:"María Estefanía Aulestia Gárate",
+	384:"Domingo Badiola ",
+	385:"María Arribálzaga ",
+	386:"Ignacio Echániz ",
+	387:"María Ignacia Gárate ",
+	388:"Antonio Arocena ",
+	389:"Brígida Larrañaga ",
+	390:"Ignacio Echániz ",
+	391:"María Ignacia Orbegozo ",
+	396:"Juan Carpasoro Angulo",
+	397:"Josefa Derendano Moroy",
+	398:"José Lataburu Biergol",
+	399:"Antonia Madaria Villamor",
+	408:"Pedro Sertucha Ycasa",
+	409:"María Cruz Mendívil Aqueche",
+	410:"José Demosti Echevarri",
+	411:"Ana María Elorduy Livano",
+	416:"Joaquín Renovales Cerro",
+	417:"Josefa Tellitu Santamaría",
+	418:"Manuel Górgolas Ygnigo",
+	419:"Lucia Palacio LLasuso",
+	420:"Francisco Zubiaga Barzena",
+	421:"Manuela Vizcaya Machín",
+	422:"Pedro Basozábal Abrisqueta",
+	423:"Agustina Aurrecoechea Aurre Lanzorta",
+	428:"Manuel Fernández del Campo Orrantia",
+	429:"Josepha Ruiz Quintana Tibo",
+	444:"Francisco Cantero Palazio",
+	445:"Bernarda Ernayz Billa",
+	446:"Juan Pando Pando",
+	447:"Inés Bringas Vizcaya",
+	480:"José Garay Cucullu",
+	481:"Úrsula Aguirre Elorriaga",
+	482:"Antonio Landa Henderica",
+	483:"Catalina Lejona Urquiza",
+	486:"Antonio Real de Asúa Larrea",
+	487:"Francisca Aguirre Iridín",
+	488:"Gabriel Garrastazu Gardezábal",
+	489:"María Saldarriaga Basualdua",
+	494:"Jacinto Retuerto Sánchez de Enderica",
+	495:"María Antonia Gárate Cruz",
+	496:"Christobal Corrochategui Oguiza",
+	497:"Antonia Loyola Aranua",
+	576:"Juan Laca Gorocica",
+	577:"Josefa Algorta Unda",
+	578:"Andrés Iturretajaúregui Orbea",
+	579:"María Perez Uriondo Vea",
+	580:"Bartolomé Ibargoen Azerisabel Unamunzaga",
+	581:"María Martínez Azerisabel Aranzeta",
+	582:"Francisco Mendibe Yloro",
+	583:"María Maguregui Lasarte",
+	590:"Miguel Gárate Muguerza",
+	591:"Mariana Gabilondo Irunaga",
+	640:"Juan Lecumberri Oleagan Lecumberri",
+	641:"María Landaguren Elorieta",
+	646:"Cristóbal Landa Zaldumbide",
+	647:"Marina Pagoeta Ziloniz",
+	662:"Sebastián Goitia Apraiz",
+	663:"Marina Mendoza Landa",
+	698:"Santiago Mendoza Landa",
+	699:"Francisca Busturia Echabarría",
+	700:"Domingo Amunátegui Arbituaga",
+	701:"Magdalena Echabarría Garano",
+	702:"Juan Naverán ",
+	703:"Josefa Tremoya ",
+	794:"Bentura Derendano Murga",
+	795:"Lucía Moroy Calzada",
+	832:"Miguel Renovales Aguirre",
+	833:"Josefa Cerro Garma",
+	834:"Martín Tellitu ",
+	835:"María Santamaría ",
+	1156:"Andrés Iturretajaúregui ",
+	1157:"María López Orbea ",
+	1280:"Juan Lecumberri Oleagan Bajaneta",
+	1281:"María Ortiz Lecumbarri Goiri",
+	1396:"Juan Mendoza Lejarraga",
+	1397:"María San Juan Landa Landa",
+	1588:"Juan Derendano Aquexolo",
+	1589:"Ángela Murga Durana",
+	1590:"Francisco Moroy Zubiaga",
+	1591:"Madalena Calzada Mendíbil",
+	1664:"José Renovales ",
+	1665:"Catalina Aguirre ",
+	3178:"Juan Murga ",
+	3179:"María Durana ",
+	3182:"Domingo Calzada Elexaja",
+	3183:"María Andrés Mendíbil Horcales"
+    };
+
+    // 2. GENERADOR AUTOMÁTICO
+    const DATOS_REALES = {};
+    for (let i = 1; i <= 8191; i++) {
+        DATOS_REALES[i] = {
+            nombre: NOMBRES_CONOCIDOS[i] || null, // Guardamos null si no lo conoces
+            padre: i < 4095 ? i * 2 : null,
+            madre: i < 4095 ? (i * 2) + 1 : null
+        };
+    }
+
+    // 3. MOTOR DE RENDERIZADO CON FILTRO DE BOTÓN
+    function dibujar(id, nivel) {
+        if (nivel > 13 || !DATOS_REALES[id]) return "";
+
+        const persona = DATOS_REALES[id];
+        
+        // REGLA: ¿Tiene este ancestro padres registrados en NOMBRES_CONOCIDOS?
+        const tienePadre = NOMBRES_CONOCIDOS[persona.padre];
+        const tieneMadre = NOMBRES_CONOCIDOS[persona.madre];
+        const mostrarBoton = tienePadre || tieneMadre;
+
+        let html = `<li>`;
+        
+        // Si no tiene datos de padres, el botón será invisible
+        const btnClass = mostrarBoton ? "btn" : "btn hidden-btn";
+        html += `<span class="${btnClass}" onclick="toggle(this)">+</span>`;
+
+        html += `<div class="card">
+                    <b>${persona.nombre || "Antepasado desconocido"}</b>
+                    <span class="gen-tag">G${nivel}</span>
+                 </div>`;
+
+        if (mostrarBoton) {
+            html += `<ul class="nested">
+                        ${dibujar(persona.padre, nivel + 1)}
+                        ${dibujar(persona.madre, nivel + 1)}
+                    </ul>`;
+        }
+
+        html += `</li>`;
+        return html;
+    }
+
+    document.getElementById('arbol').innerHTML = `<ul>${dibujar(1, 1)}</ul>`;
+
+    function toggle(e) {
+        const lista = e.parentElement.querySelector('.nested');
+        if (lista) {
+            lista.classList.toggle('show');
+            e.innerText = lista.classList.contains('show') ? "-" : "+";
+            e.style.background = lista.classList.contains('show') ? "#e74c3c" : "#3498db";
+        }
+    }
+</script>
+
+</body>
+</html>
