@@ -163,10 +163,13 @@ nombre =  familiares[selec][2] + " " + familiares[selec][3] + ", " + familiares[
 
 if (selec == 0)
  {
-  
-  nombre = '<a href="antepasados.html" style="float: left;">' +  nombre + '</a>';
+  nombre = '<a href="antepasados_inma.html" style="float: left;">' +  nombre + '</a>';
  }
 
+if (selec == 1 || selec == 11 || selec == 12 )
+ {
+  nombre = '<a href="antepasados_inma.html" style="float: left;">' +  nombre + '</a>';
+ }
 tabla='<table class="contenedor_tabla">';
 /* tabla = tabla + '<tr><td class="col_id2">Nombre</td><td class="nombre">' + familiares[selec][2] + " " + familiares[selec][3] + ", " + familiares[selec][1] + '</td></tr>'; */
 tabla = tabla + '<tr><td class="col_id2">Nombre</td><td class="nombre">' + nombre + '</td></tr>';

@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Mi Árbol Genealógico Real</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background: #f4f4f9; padding: 20px; }
+        .container { max-width: 900px; margin: auto; background: white; padding: 25px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+        ul { list-style: none; padding-left: 25px; border-left: 1px solid #ddd; margin: 5px 0; }
+        li { margin: 6px 0; position: relative; }
+        
+        .btn {
+            cursor: pointer; width: 22px; height: 22px; display: inline-flex;
+            align-items: center; justify-content: center; background: #3498db;
+            color: white; border-radius: 4px; font-size: 16px; margin-right: 8px;
+            user-select: none;
+        }
+        /* Clase para ocultar el botón cuando no hay datos */
+        .hidden-btn { visibility: hidden; pointer-events: none; }
+        
+        .card {
+            display: inline-block; padding: 5px 12px; border-radius: 6px;
+            background: #fff; border: 1px solid #ccc; font-size: 14px;
+            min-width: 250px;
+        }
+        .gen-tag { float: right; font-size: 10px; color: #aaa; margin-top: 3px; }
+        .nested { display: none; }
+        .show { display: block; }
+        h1 { text-align: center; color: #2c3e50; border-bottom: 3px solid #3498db; padding-bottom: 10px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Antepasados (13 generaciones)</h1>
+    <div id="arbol"></div>
+</div>
+
+<script>
+    // 1. RELLENA AQUÍ TUS DATOS REALES
+    const NOMBRES_CONOCIDOS = {
+1:"Hermanas San Emeterio Muniozguren",
+2:"Iñaki San Emeterio Iturribarría",
+3:"Miren Muniozguren López de la Riva",
+4:"Ignacio San Emeterio González",
+5:"Emilia Iturribarría Castrejana",
+6:"Tomás Muniozguren Salazar",
+7:"Flora López de la Riva Renes",
+8:"Luis San Emeterio ",
+9:"Casilda González Ruiz",
+10:"XXXX Iturribarría ",
+11:"XXXX Castrejana ",
+12:"Juan Tomás Muniozguren Ordeñana",
+13:"Pilar Salazar Saracho",
+14:"José López de la Riva Angulo",
+15:"Ángela Renés López",
+24:"Sebastián Muniozguren Guerricabeitia",
+25:"Valentina Orduña La Antigua",
+26:"Ángel Salazar Arichaga",
+27:"Silvestra Sarachu Sasia",
+48:"José Manuel Muniozguren Zamalloa",
+49:"María Bautista Guerricabeitia Ereño",
+52:"José María Salazar Urraza",
+53:"María Teresa Arichaga Ibarrondo",
+54:"Tomás Sarachu Zabala",
+55:"Victoriana Sasia Maruri",
+96:"Manuel Muniozguren Basabe",
+97:"María Ramos Zamalloa Borde",
+98:"Francisco Guerricabeitia Urteaga",
+99:"María Ereño Beibide",
+104:"Mariano Salazar Arbide",
+105:"María Paula Urraza Acha",
+106:"Domingo Arizaga Echevarría",
+107:"María Francisca Ibarrondo Jugo",
+108:"Manuel Sarachu Basterra",
+109:"María Martina Zabala Urquijo",
+110:"Seberino Sasia Ureta",
+111:"María Antonia Maruri Abiega",
+192:"Santiago Muniozguren Ituarte",
+193:"Ana María Basabe Olea",
+194:"Sebastián Zamalloa Urizar",
+195:"María Rosa Borde Emendarte",
+196:"Bernardo Guerricabeitia Aransolo",
+197:"Marina Urteaga Ascarreta",
+198:"Hemeterio Ereño Urquiola",
+199:"María Antonia Beibide Totorica",
+208:"Juan Andrés Salazar Aguirre",
+209:"María Petronila Arbide Larrea",
+210:"Domingo Urraza Zarraga",
+211:"Marina Acha Arezmendi",
+212:"Juan Arichaga Elguía",
+213:"María Andresa Echevarría Zulaibar",
+214:"José Ibarrondo Eguía",
+215:"Dominga Jugo Echevarría",
+216:"Manuel Sarachu Gardoqui",
+217:"Josefa Basterra Cabex",
+218:"Pedro Zabala Echavarría",
+219:"María Urquijo Madariaga",
+220:"José Sasía Aranguren",
+221:"Margarita Ureta Lezama",
+384:"Juan Muniozguren Ariño",
+385:"Lucía Ituarte Larrea",
+386:"Manuel Basabe Arechaga",
+387:"Madalena Olea Ereño",
+388:"Sebastián Zamalloa Aperribai",
+389:"Marina Urízar Artundoaga",
+390:"José Borde Aldape",
+391:"Dominga Emendarte Solachi",
+392:"Francisco Guerricabeitia Ortúzar",
+393:"Marina Aransolo Urízar",
+394:"Francisco Urteaga Longarte",
+395:"Josefa Ascarreta Amezti",
+416:"José Salazar Arguiñano",
+417:"Francisca Aguirre Abrisqueta",
+420:"Pedro Urraza Arana",
+421:"Lorenza Zarraga Hernani",
+422:"Domingo Acha Sagasola",
+423:"Petronilla Arezmendi Basaurbe",
+434:"Esteban Basterra Bea",
+435:"María Cabex Hurtado",
+436:"Domingo Zabala Zugasti",
+437:"María Antonia Echebarría Torre",
+438:"Domingo Urquijo Arteaga",
+439:"Tomasa Madariaga Echeandía",
+440:"Francisco Sasia Escobal",
+441:"María Santos Aranguren Oyos",
+768:"Juan Muniozguren Iturbe",
+769:"Magdalena Ariño Echavarría",
+770:"Santiago Ituarte Unzueta",
+771:"Jacinta Larrea Olaeche",
+772:"Pedro Basabe Rementería Zumaeta",
+773:"Marina Arechaga Larrabe",
+774:"Joan Olea Legorburu",
+775:"María Ereño Aguiano",
+788:"Miguel Urteaga Elexalde",
+789:"María Longarte Arróspide",
+790:"Francisco Ascarreta Maguna",
+791:"Ana Amezti Olaechea",
+840:"Miguel Urraza Arana",
+841:"Luisa Arana Guesala",
+844:"Domingo Acha Asua",
+845:"María Sagasola Arguiano",
+846:"Antonio Arezmendi Aranguren",
+847:"Mariana Basaurbe Acha",
+868:"Francisco Basterra Lecanduri",
+869:"María Tomasa Bea Aguirre",
+1540:"Ignacio Ituarte Alzolabea",
+1541:"Antonia Unzueta Ariztegui",
+1542:"Joan Larrea Ibarra",
+1543:"María Cruz Olaeche Heyzaga",
+1544:"Pedro Basabe Rementería Garay",
+1545:"Magdalena Zumaeta Ugarteleque",
+1548:"Joan Olea Hereño",
+1549:"Marina Legorburu Eizaga",
+1576:"Juan Urteaga Urionaechebarría",
+1577:"María Elexalde Guerricabeitia",
+1580:"Miguel Ascarreta ",
+1581:"Marina Maguna ",
+1582:"Pedro Amezti Agorria",
+1583:"María Olaechea Ochaita",
+1680:"Domingo Urraza Orbe",
+1681:"Francisca Arana Olalzar",
+1692:"Antonio Arezmendi Goicouria",
+1693:"María Alonsa Aranguren Orue",
+1736:"Juan Basterra Catadiano",
+1737:"Mari Joanes Lecanduri Cendegui",
+1738:"Juan Bea Azcaray",
+1739:"Ana Aguirre Urteaga",
+3080:"Nicolao Ituarte Gárate",
+3081:"Catalina Alzolabea Echeverría",
+3088:"Martín Basabe Rementería Oynquina Rementería",
+3089:"Ana Garay Barroeta",
+3152:"Mateo Urteaga ",
+3153:"Catalina Urionaechebarría ",
+3386:"Martín Aranguren ",
+3387:"María Orue Arbide",
+3478:"Martín Bea Epalza",
+3479:"Marina Azcaray Areilza",
+6178:"Sancho Garay ",
+6179:"Catalina Barrueta ",
+6774:"Pedro Orue ",
+6775:"Marina Arbide "
+    };
+
+    // 2. GENERADOR AUTOMÁTICO
+    const DATOS_REALES = {};
+    for (let i = 1; i <= 16384; i++) {
+        DATOS_REALES[i] = {
+            nombre: NOMBRES_CONOCIDOS[i] || null, // Guardamos null si no lo conoces
+            padre: i < 8191 ? i * 2 : null,
+            madre: i < 8191 ? (i * 2) + 1 : null
+        };
+    }
+
+    // 3. MOTOR DE RENDERIZADO CON FILTRO DE BOTÓN
+    function dibujar(id, nivel) {
+        if (nivel > 14 || !DATOS_REALES[id]) return "";
+
+        const persona = DATOS_REALES[id];
+        
+        // REGLA: ¿Tiene este ancestro padres registrados en NOMBRES_CONOCIDOS?
+        const tienePadre = NOMBRES_CONOCIDOS[persona.padre];
+        const tieneMadre = NOMBRES_CONOCIDOS[persona.madre];
+        const mostrarBoton = tienePadre || tieneMadre;
+
+        let html = `<li>`;
+        
+        // Si no tiene datos de padres, el botón será invisible
+        const btnClass = mostrarBoton ? "btn" : "btn hidden-btn";
+        html += `<span class="${btnClass}" onclick="toggle(this)">+</span>`;
+
+        html += `<div class="card">
+                    <b>${persona.nombre || "Antepasado desconocido"}</b>
+                    <span class="gen-tag">G${nivel}</span>
+                 </div>`;
+
+        if (mostrarBoton) {
+            html += `<ul class="nested">
+                        ${dibujar(persona.padre, nivel + 1)}
+                        ${dibujar(persona.madre, nivel + 1)}
+                    </ul>`;
+        }
+
+        html += `</li>`;
+        return html;
+    }
+
+    document.getElementById('arbol').innerHTML = `<ul>${dibujar(1, 1)}</ul>`;
+
+    function toggle(e) {
+        const lista = e.parentElement.querySelector('.nested');
+        if (lista) {
+            lista.classList.toggle('show');
+            e.innerText = lista.classList.contains('show') ? "-" : "+";
+            e.style.background = lista.classList.contains('show') ? "#e74c3c" : "#3498db";
+        }
+    }
+</script>
+
+</body>
+</html>
