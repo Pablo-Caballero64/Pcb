@@ -82,6 +82,7 @@
 
 	<button onclick="muestra_previo()" class="boton-redondo">Anterior </button> 
 	
+	
 	<div id="table_div" style="width: 100%;"></div>
 	<br>
     <div id="table_div2" style="width: 100%;"></div>
@@ -89,7 +90,9 @@
 
 	<div class="container">
 	
-    <h1>Antepasados</h1>
+    
+	
+	<h1>Antepasados <a id="totales" style="font-size: 0.6em; font-weight: normal;">(Total: 150)</a></h1>
     <div id="arbol"></div>
 
 	</div>
@@ -15597,8 +15600,8 @@ function carga_inicial()
 
 function cargar_antepasados(selec) 
 {
-    historia[indice_historia]=selec;
-    indice_historia = indice_historia + 1;
+	historia[indice_historia]=selec;
+	indice_historia = indice_historia + 1;
 	origen = selec;
 	contador = 1;
 	linea_salida = 0;
@@ -15606,21 +15609,22 @@ function cargar_antepasados(selec)
 	selec = origen;
 	const NOMBRES_CONOCIDOS = {};
 	indice = origen;
+	total_individuos = 1;
 	NOMBRES_CONOCIDOS[contador] = fam[selec][1] + " " + fam[selec][2] + " " + fam[selec][3];
 	
 	//moebius inicio enlaces a nacimiento y defunción
 	contador_a_nacim = 0;
-    enlace_aheb_naci = " ";
-    enlace_aheb_defu = " ";
+	enlace_aheb_naci = " ";
+	enlace_aheb_defu = " ";
 
-   while  (fam[selec][contador_a_nacim + 1] !== "C9") {contador_a_nacim = contador_a_nacim + 1;}
-   if (fam[selec][contador_a_nacim + 2] == "BI"){enlace_aheb_naci = "https://internet.aheb-beha.org/paginas/indexacion/n_ficha_bautismos.php?id_bautismo=" + fam[selec][contador_a_nacim + 3];}
-   if (fam[selec][contador_a_nacim + 2] == "SS"){enlace_aheb_naci  = "https://artxiboa.mendezmende.org/es/busque-partidas-sacramentales/ver.html?id=" + fam[selec][contador_a_nacim + 3] + "&sacramento=b";}
-   if (fam[selec][contador_a_nacim + 2] == "VI"){enlace_aheb_naci  = "http://internet.ahdv-geah.org/paginas/indexacion/n_ficha_bautismos.php?id_bautismo=" + fam[selec][contador_a_nacim + 3];}
-   
-   if (fam[selec][contador_a_nacim + 4] == "BI"){enlace_aheb_defu = "https://internet.aheb-beha.org/paginas/indexacion/n_ficha_difuntos.php?id_difunto=" + fam[selec][contador_a_nacim + 5];}
-   if (fam[selec][contador_a_nacim + 4] == "SS"){enlace_aheb_defu  = "https://artxiboa.mendezmende.org/es/busque-partidas-sacramentales/ver.html?id=" + fam[selec][contador_a_nacim + 5] + "&sacramento=d";}
-   if (fam[selec][contador_a_nacim + 4] == "VI"){enlace_aheb_defu  = "http://internet.ahdv-geah.org/paginas/indexacion/n_ficha_difuntos.php?id_difunto=" + fam[selec][contador_a_nacim + 5];}
+	while (fam[selec][contador_a_nacim + 1] !== "C9") {contador_a_nacim = contador_a_nacim + 1;}
+	if (fam[selec][contador_a_nacim + 2] == "BI"){enlace_aheb_naci = "https://internet.aheb-beha.org/paginas/indexacion/n_ficha_bautismos.php?id_bautismo=" + fam[selec][contador_a_nacim + 3];}
+	if (fam[selec][contador_a_nacim + 2] == "SS"){enlace_aheb_naci  = "https://artxiboa.mendezmende.org/es/busque-partidas-sacramentales/ver.html?id=" + fam[selec][contador_a_nacim + 3] + "&sacramento=b";}
+	if (fam[selec][contador_a_nacim + 2] == "VI"){enlace_aheb_naci  = "http://internet.ahdv-geah.org/paginas/indexacion/n_ficha_bautismos.php?id_bautismo=" + fam[selec][contador_a_nacim + 3];}
+
+	if (fam[selec][contador_a_nacim + 4] == "BI"){enlace_aheb_defu = "https://internet.aheb-beha.org/paginas/indexacion/n_ficha_difuntos.php?id_difunto=" + fam[selec][contador_a_nacim + 5];}
+	if (fam[selec][contador_a_nacim + 4] == "SS"){enlace_aheb_defu  = "https://artxiboa.mendezmende.org/es/busque-partidas-sacramentales/ver.html?id=" + fam[selec][contador_a_nacim + 5] + "&sacramento=d";}
+	if (fam[selec][contador_a_nacim + 4] == "VI"){enlace_aheb_defu  = "http://internet.ahdv-geah.org/paginas/indexacion/n_ficha_difuntos.php?id_difunto=" + fam[selec][contador_a_nacim + 5];}
 
 	if (enlace_aheb_naci > " ") {nacimiento = '<a style=\"align:right\" href=\"' + enlace_aheb_naci + '\">' + fam[selec][6] + '</a>'} else {nacimiento = fam[selec][6];}
 	if (enlace_aheb_defu > " ") {defuncion = '<a style=\"align:right\" href=\"' + enlace_aheb_defu + '\">' + fam[selec][7] + '</a>'} else {defuncion = fam[selec][7];}
@@ -15633,21 +15637,29 @@ function cargar_antepasados(selec)
 	
 	let elemento = [[], [], []];
 	elemento[0][1] = indice; 
-	for (let niv = 0; niv <= 16; niv++) {
+	for (let niv = 0; niv <= 16; niv++) 
+	{
 		elemento[niv + 1] = []
 		cuenta = 1;
+		cuenta_nivel = 0;
 		for (let i = 1; i <= 2**niv; i++) 
-        {
+			{
 			selec = elemento[niv][i];
-			if (selec > -1) {indice = fam[selec][8] - 1; elemento[niv + 1][cuenta] = indice} else {elemento[niv + 1][cuenta] = -1}
+			if (selec > -1) {indice = fam[selec][8] - 1; elemento[niv + 1][cuenta] = indice} else {elemento[niv + 1][cuenta] = -1; indice = -1;}
 			cuenta = cuenta + 1;
 			contador = contador + 1;
-			if (indice > -1) {NOMBRES_CONOCIDOS[contador] = '<a onclick="cargar_antepasados(' +  indice + ')" >' + fam[indice][1] + " " + fam[indice][2] + " " + fam[indice][3] + '</a>';}
-			if (selec > -1) {indice = fam[selec][9] - 1; elemento[niv + 1][cuenta] = indice} else {elemento[niv + 1][cuenta] = -1}
+			if (indice > -1) {NOMBRES_CONOCIDOS[contador] = '<a onclick="cargar_antepasados(' +  indice + ')" >' + fam[indice][1] + " " + fam[indice][2] + " " + fam[indice][3] + '</a>'; 
+			total_individuos = total_individuos + 1; cuenta_nivel = cuenta_nivel + 1;}
+			if (selec > -1) {indice = fam[selec][9] - 1; elemento[niv + 1][cuenta] = indice} else {elemento[niv + 1][cuenta] = -1; indice = -1}
 			cuenta = cuenta + 1;
 			contador = contador + 1;
-			if (indice > -1) { NOMBRES_CONOCIDOS[contador] = '<a onclick="cargar_antepasados(' +  indice + ')" >' + fam[indice][1] + " " + fam[indice][2] + " " + fam[indice][3]  + '</a>';}
-		}
+			if (indice > -1) {NOMBRES_CONOCIDOS[contador] = '<a onclick="cargar_antepasados(' +  indice + ')" >' + fam[indice][1] + " " + fam[indice][2] + " " + fam[indice][3]  + '</a>';
+			total_individuos = total_individuos + 1;; cuenta_nivel = cuenta_nivel + 1;}
+			}
+			if (cuenta_nivel == 0) {break};
+	}  
+	var id_totales = document.getElementById("totales");
+	id_totales.innerHTML=" (Total personas : " + total_individuos + ")";
 	
 	var id_tabla = document.getElementById("table_div");
 	id_tabla.innerHTML=tabla;
@@ -15655,13 +15667,10 @@ function cargar_antepasados(selec)
 	conyuge = "";
 	boda = "";	ind_conyu = 10;
 	tabla2='<ul class="arbol-genealogico">';  
-	
 	// INICIO parte de los cónyuges e hijos 
-	
-	
+
 	while  (fam[origen][ind_conyu + 1] !== "C9")
 	{
-		
      if (fam[origen][ind_conyu] == "C1" || fam[origen][ind_conyu] == "C2" || fam[origen][ind_conyu] == "C3")
 		{
 		 conyuge = "";
@@ -15682,29 +15691,20 @@ function cargar_antepasados(selec)
 		tabla2 = tabla2 + '     ' + dato_boda + '</div><ul>';
 		indice_hijo = ind_conyu + 5;
 		ind_hijo = 0;
-		
-		
 		while  (isNaN(fam[origen][indice_hijo]) !== true)
 			{
-			
 			ind_hijo = fam[origen][indice_hijo] - 1;
-			
 			tabla2 = tabla2  + '<li><div onclick="cargar_antepasados(' + ind_hijo + ')">' + fam[fam[origen][indice_hijo]-1][1] + '</div></li>';
-			
 			indice_hijo++;
 			} 
 		tabla2 = tabla2 + '</ul></li>';
 		} 
-		
 		ind_conyu++;
-	 
 	}
 	tabla2 = tabla2 + '</ul>';
 	var id_tabla2 = document.getElementById("table_div2");
-    id_tabla2.innerHTML=tabla2;
+	id_tabla2.innerHTML=tabla2;
 
-	
-}  
     
 // FINAL parte de los cónyuges e hijos 
 
